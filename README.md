@@ -26,4 +26,14 @@ To run the sensor and visualization on pre-configured Rviz file, run:
 roslaunch anavs-ros-adapter gnss_display.launch
 ```
 
-This will change the default IP address to `192.168.0.100`, to set a diffeerent IP address, use the argument `ip_addr:=value`
+This will use the default IP address to `192.168.0.100`, to set a diffeerent IP address, use the argument `ip_addr:=value`
+
+## Satellite fix
+
+To get the output on the `sensor_msgs/NavSatFix` format, run:
+
+```
+roslaunch anavs-ros-adapter fix.launch
+```
+
+This will also publish the NMEA sentences on the `nmea_sentences` topic.
