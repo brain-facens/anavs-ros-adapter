@@ -14,7 +14,7 @@ s.connect(('192.168.0.101', 6002))
 f = s.makefile()
 while not rospy.is_shutdown():
     msg = Sentence()
-    msg.sentence = f.readline()[:-1]
+    msg.sentence = f.readline()[:-2]
     msg.header.frame_id = 'gps'
     msg.header.stamp = rospy.Time.now()
     pub.publish(msg)
