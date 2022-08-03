@@ -6,10 +6,11 @@
     <!-- Node for publishing NavSatFix messages from the NMEA sentences published by nmea_messages -->
     <node pkg="nmea_navsat_driver"   type="nmea_topic_driver"        name="nmea_topic_driver" />
 
+    <!-- TF2 broadcaster -->
+    <node pkg="anavs-ros-adapter"    type="tf2_broadcaster.py"       name="gnss_broadcaster"  />
+
     <!-- Node for RVIZ visualization -->
     <node pkg="rviz"    type="rviz"     name="rviz"
           args="-d $(find anavs-ros-adapter)/rviz/satellite.rviz" />
     
-    <!-- TF2 test -->
-    <node pkg="tf2_ros" type="static_transform_publisher" name="static_tf_fake" args="100 200 5 0.3 0 0 map base_link" />
 </launch>
