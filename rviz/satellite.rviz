@@ -7,6 +7,8 @@ Panels:
         - /Global Options1
         - /Status1
         - /AerialMapDisplay1
+        - /AerialMapDisplay1/Status1
+        - /Axes2/Status1
       Splitter Ratio: 0.5
     Tree Height: 734
   - Class: rviz/Selection
@@ -35,24 +37,6 @@ Toolbars:
 Visualization Manager:
   Class: ""
   Displays:
-    - Alpha: 0.5
-      Cell Size: 1
-      Class: rviz/Grid
-      Color: 160; 160; 164
-      Enabled: true
-      Line Style:
-        Line Width: 0.029999999329447746
-        Value: Lines
-      Name: Grid
-      Normal Cell Count: 0
-      Offset:
-        X: 0
-        Y: 0
-        Z: 0
-      Plane: XY
-      Plane Cell Count: 10
-      Reference Frame: <Fixed Frame>
-      Value: true
     - Alpha: 0.699999988079071
       Blocks: 3
       Class: rviz_plugins/AerialMapDisplay
@@ -63,11 +47,25 @@ Visualization Manager:
       Topic: /fix
       Value: true
       Zoom: 16
+    - Class: rviz/Axes
+      Enabled: true
+      Length: 50
+      Name: Axes
+      Radius: 5
+      Reference Frame: base_link
+      Value: true
+    - Class: rviz/Axes
+      Enabled: true
+      Length: 50
+      Name: Axes
+      Radius: 5
+      Reference Frame: map
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: map
+    Fixed Frame: base_link
     Frame Rate: 30
   Name: root
   Tools:
@@ -91,7 +89,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 1587.4444580078125
+      Distance: 884.454345703125
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -101,15 +99,15 @@ Visualization Manager:
         X: 0
         Y: 0
         Z: 0
-      Focal Shape Fixed Size: true
+      Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.785398006439209
+      Pitch: 0.6753981113433838
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 0.785398006439209
+      Yaw: 0.7453982830047607
     Saved: ~
 Window Geometry:
   Displays:
