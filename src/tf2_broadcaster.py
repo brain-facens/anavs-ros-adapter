@@ -23,7 +23,7 @@ def broadcast_gnss(fix, gnss_name, br = tf2_ros.TransformBroadcaster()):
     """
     t = TransformStamped()
 
-    t.header.stamp = rospy.Time.now()
+    t.header.stamp = fix.header.stamp
     t.header.frame_id = "world"
     t.child_frame_id = gnss_name
 

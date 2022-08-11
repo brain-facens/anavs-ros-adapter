@@ -1,5 +1,5 @@
 <launch>
-    <arg name="ip_addr" default="192.168.0.100" />
+    <arg name="ip_addr" default="192.168.0.101" />
     <node pkg="anavs-ros-adapter" type="anavs_ros_ethernet_client" name="anavs_positioning_solution"   output="screen"
           args="padsolution2ros --ip $(arg ip_addr) --publish_to_tf --publish_path"/>
 

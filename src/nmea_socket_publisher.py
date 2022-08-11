@@ -17,9 +17,10 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((IP_ADDRESS, PORT))
 
 f = s.makefile()
+
 while not rospy.is_shutdown():
     msg = Sentence()
-    msg.sentence = f.readline()[:-2]
+    msg.sentence = f.readline()[:-2] # Remove the '\r\n' end of the string
     msg.header.frame_id = FRAME_ID
     msg.header.stamp = rospy.Time.now()
     publisher.publish(msg)
