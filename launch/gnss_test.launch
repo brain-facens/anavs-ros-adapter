@@ -1,19 +1,29 @@
 <launch>
-    <!-- TODO: receive argument for IP address <arg name="ip_addr" default="192.168.0.101" /> -->
-    <!-- Node for publishing NMEA messages from TCP socket to ROS -->
-    <node pkg="anavs-ros-adapter"    type="nmea_socket_publisher.py" name="nmea_messages"     />
+  <!-- Run NMEA nodes -->
+  <include file="$(find anavs-ros-adapter)/launch/fix.launch">
+    <arg name="display" value="false" />
+  </include>
 
-    <!-- Node for publishing NavSatFix messages from the NMEA sentences published by nmea_messages -->
-    <node pkg="nmea_navsat_driver"   type="nmea_topic_driver"        name="nmea_topic_driver" />
+  <!-- Run ANAVS nodes -->
+  <include file="$(find anavs-ros-adapter)/launch/anavs_display.launch">
+    <arg name="display" value="false" />
+  </include>
 
-    <!-- TF2 broadcaster -->
-    <node pkg="anavs-ros-adapter"    type="tf2_broadcaster.py"       name="gnss_broadcaster"  />
+  <arg name="record"      default="true" />
+  <group  if="$(arg record)">
 
-    <!-- Node for RVIZ visualization -->
-    <node pkg="rviz"    type="rviz"     name="rviz"
-          args="-d $(find anavs-ros-adapter)/rviz/satellite.rviz" />
-    
-    <node pkg="rosbag"  type="record"   name="record_tf"
-          args="-a --output-name=$(find anavs-ros-adapter)/bagfiles/TESTE " />
-    
+    <node pkg="rosbag"  type="record"   name="record_tfs"
+          args="--output-prefix=$(find anavs-ros-adapter)/bagfiles/tfs
+                /tf" />
+
+    <node pkg="rosbag"  type="record"   name="record_anavs"
+          args="--output-prefix=$(find anavs-ros-adapter)/bagfiles/anavs 
+                /anavs/solution/pos_xyz" />
+
+    <node pkg="rosbag"  type="record"   name="record_fix"
+          args ="--output-prefix=$(find anavs-ros-adapter)/bagfiles/fix
+                 /fix" />
+
+  </group>
+
 </launch>
