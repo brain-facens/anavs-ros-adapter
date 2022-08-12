@@ -1,0 +1,19 @@
+<launch>
+    <!-- TODO: receive argument for IP address <arg name="ip_addr" default="192.168.0.101" /> -->
+    <!-- Node for publishing NMEA messages from TCP socket to ROS -->
+    <node pkg="anavs-ros-adapter"    type="nmea_socket_publisher.py" name="nmea_messages"     />
+
+    <!-- Node for publishing NavSatFix messages from the NMEA sentences published by nmea_messages -->
+    <node pkg="nmea_navsat_driver"   type="nmea_topic_driver"        name="nmea_topic_driver" />
+
+    <!-- TF2 broadcaster -->
+    <node pkg="anavs-ros-adapter"    type="tf2_broadcaster.py"       name="gnss_broadcaster"  />
+
+    <!-- Node for RVIZ visualization -->
+    <node pkg="rviz"    type="rviz"     name="rviz"
+          args="-d $(find anavs-ros-adapter)/rviz/satellite.rviz" />
+    
+    <node pkg="rosbag"  type="record"   name="record_tf"
+          args="-a --output-name=$(find anavs-ros-adapter)/bagfiles/TESTE " />
+    
+</launch>
