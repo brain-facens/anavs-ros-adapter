@@ -10,7 +10,8 @@
     <node pkg="anavs-ros-adapter"    type="tf2_broadcaster.py"       name="gnss_broadcaster"  />
 
     <!-- Node for RVIZ visualization -->
-    <node pkg="rviz"    type="rviz"     name="rviz"
+    <arg  name="display" default="true" />
+    <node pkg="rviz"    type="rviz"     name="nmea_viz"     if="$(arg display)"
           args="-d $(find anavs-ros-adapter)/rviz/satellite.rviz" />
     
 </launch>
