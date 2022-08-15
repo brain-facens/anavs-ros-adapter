@@ -4,7 +4,9 @@
     <node pkg="anavs-ros-adapter"    type="nmea_socket_publisher.py" name="nmea_messages"     />
 
     <!-- Node for publishing NavSatFix messages from the NMEA sentences published by nmea_messages -->
-    <node pkg="nmea_navsat_driver"   type="nmea_topic_driver"        name="nmea_topic_driver" />
+    <node pkg="nmea_navsat_driver"   type="nmea_topic_driver"        name="nmea_topic_driver" >
+      <param name="useRMC" value="true"/>
+    </node>
 
     <!-- TF2 broadcaster -->
     <node pkg="anavs-ros-adapter"    type="tf2_broadcaster.py"       name="gnss_broadcaster"  />
