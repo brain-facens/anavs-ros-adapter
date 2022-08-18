@@ -2,8 +2,11 @@
 import pyproj
 import rospy
 import tf2_ros
+import message_filters as mf
+import numpy as np
 
-from geometry_msgs.msg import TransformStamped, Quaternion, Vector3
+from tf.transformations import quaternion_from_euler
+from geometry_msgs.msg import TransformStamped, Vector3, TwistStamped
 from sensor_msgs.msg import NavSatFix
 
 WSG84 = 4326
@@ -11,7 +14,14 @@ XY_METERS = 3857
 
 coord_transformer = pyproj.Transformer.from_crs(WSG84, XY_METERS)
 
-def broadcast_gnss(fix, gnss_name, br = tf2_ros.TransformBroadcaster()):
+def quaternion_from_vector(vector):
+
+    if vector.z != 0:
+        rospy.logwarn('This node cannot deal with vectors with nonzero z component')
+    
+    return quaternion_from_euler(0, 0, np.arctan2(vector.y, vector.x))
+
+def broadcast_gnss(fix, vel, gnss_name, br = tf2_ros.TransformBroadcaster()):
     """Broadcast GNSS data as TF2
 
     :param fix: Topic for GNSS data
@@ -28,15 +38,24 @@ def broadcast_gnss(fix, gnss_name, br = tf2_ros.TransformBroadcaster()):
     t.child_frame_id = gnss_name
 
     x, y = coord_transformer.transform(fix.latitude, fix.longitude)
-    t.transform.translation = Vector3(x, y, fix.altitude)
+    if np.isnan(fix.altitude):
+        rospy.logwarn('Missing altitude information')
+        t.transform.translation = Vector3(x, y, 0)
+    else:
+        t.transform.translation = Vector3(x, y, fix.altitude)
 
-    t.transform.rotation = Quaternion(w=1)
+    t.transform.rotation = quaternion_from_vector(vel.twist.linear)
 
     br.sendTransform(t)
 
 if __name__ == '__main__':
     rospy.init_node('gnss_broadcaster')
+
     gnss_name = rospy.get_param('gnss_name', default='gps')
-    rospy.Subscriber('/fix', NavSatFix, broadcast_gnss, callback_args=gnss_name)
+    fix_sub = mf.Subscriber('/fix', NavSatFix)
+    vel_sub = mf.Subscriber('/vel', TwistStamped)
+
+    ts = mf.TimeSynchronizer([fix_sub, vel_sub], 10)
+    ts.registerCallback(broadcast_gnss, gnss_name)
     rospy.spin()
     

@@ -6,6 +6,7 @@
     <!-- Node for publishing NavSatFix messages from the NMEA sentences published by nmea_messages -->
     <node pkg="nmea_navsat_driver"   type="nmea_topic_driver"        name="nmea_topic_driver" >
       <param name="useRMC" value="true"/>
+      <param name="time_ref_source" value="gps"/>
     </node>
 
     <!-- TF2 broadcaster -->
