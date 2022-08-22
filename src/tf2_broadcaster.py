@@ -6,7 +6,7 @@ import message_filters as mf
 import numpy as np
 
 from tf.transformations import quaternion_from_euler
-from geometry_msgs.msg import TransformStamped, Vector3, TwistStamped
+from geometry_msgs.msg import TransformStamped, Vector3, TwistStamped, Quaternion
 from sensor_msgs.msg import NavSatFix
 
 WSG84 = 4326
@@ -19,7 +19,7 @@ def quaternion_from_vector(vector):
     if vector.z != 0:
         rospy.logwarn('This node cannot deal with vectors with nonzero z component')
     
-    return quaternion_from_euler(0, 0, np.arctan2(vector.y, vector.x))
+    return Quaternion(*quaternion_from_euler(0, 0, np.arctan2(vector.y, vector.x)))
 
 def broadcast_gnss(fix, vel, gnss_name, br = tf2_ros.TransformBroadcaster()):
     """Broadcast GNSS data as TF2
