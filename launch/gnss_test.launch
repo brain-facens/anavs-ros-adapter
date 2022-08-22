@@ -24,6 +24,10 @@
           args ="--output-prefix=$(find anavs-ros-adapter)/bagfiles/fix
                  /fix" />
 
+    <node pkg="rosbag"  type="record"   name="record_sentences"
+          args="--output-prefix=$(find anavs-ros-adapter)/bagfiles/nmea
+                /nmea_sentence" />
+
   </group>
 
 </launch>
