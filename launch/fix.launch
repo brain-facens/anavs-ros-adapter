@@ -5,12 +5,14 @@
 
     <!-- Node for publishing NavSatFix messages from the NMEA sentences published by nmea_messages -->
     <node pkg="nmea_navsat_driver"   type="nmea_topic_driver"        name="nmea_topic_driver" >
-      <param name="useRMC" value="true"/>
+      <!-- <param name="useRMC" value="false"/> -->
       <param name="time_ref_source" value="gps"/>
     </node>
 
     <!-- TF2 broadcaster -->
     <node pkg="anavs-ros-adapter"    type="tf2_broadcaster.py"       name="gnss_broadcaster"  />
+
+    <node pkg="tf2_ros" type="static_transform_publisher" name="static_tf" args="0 0 0 0 0 0 map gps" />
 
     <!-- Node for RVIZ visualization -->
     <arg  name="display" default="true" />
