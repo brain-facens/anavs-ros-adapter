@@ -55,7 +55,7 @@ if __name__ == '__main__':
     fix_sub = mf.Subscriber('/fix', NavSatFix)
     vel_sub = mf.Subscriber('/vel', TwistStamped)
 
-    ts = mf.TimeSynchronizer([fix_sub, vel_sub], 10)
+    ts = mf.ApproximateTimeSynchronizer([fix_sub, vel_sub], 10, 0.01)
     ts.registerCallback(broadcast_gnss, gnss_name)
     rospy.spin()
     
