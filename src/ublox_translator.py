@@ -22,12 +22,14 @@ def combine(enu_pose: NavVELNED, llh_position: NavPOSLLH):
     :type position: PointStamped
     """
 
-    # Creates a pose object and fills header and orientation from ENU
+    # Creates a pose object and fills header
     new_pose = PoseStamped()
     new_pose.header = rospy.Time.now()
-    theta = np.deg2rad(enu_pose.heading) / 2
+
+    # Creates Quaternion from heading information
+    theta = np.deg2rad(enu_pose.heading * 1e-5) / 2
     new_pose.pose.orientation = Quaternion(w=np.cos(theta), z=np.sin(theta))
     
     # Tranlates coordinates and adds position information from LLH
     x, y = coord_transformer.transform(llh_position.lat * 1e-7, llh_position.lon * 1e-7)
-    new_pose.pose.position = Point(x, y, llh_position.height)
+    new_pose.pose.position = Point(x, y, llh_position.height * 1e-3)
