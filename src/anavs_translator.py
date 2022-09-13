@@ -22,9 +22,10 @@ def combine(enu_pose: PoseWithCovarianceStamped, llh_position: PointStamped):
     :type position: PointStamped
     """
 
-    # Creates a pose object and fills header and orientation from ENU
+    # Creates a pose object and fills header
     new_pose = PoseStamped()
     new_pose.header = enu_pose.header
+
     new_pose.pose.orientation = enu_pose.pose.pose.orientation
     
     # Tranlates coordinates and adds position information from LLH
@@ -34,10 +35,10 @@ def combine(enu_pose: PoseWithCovarianceStamped, llh_position: PointStamped):
     
     publisher.publish(new_pose)
 
-
-publisher = rospy.Publisher('pose', PoseStamped)
-enu_sub = message_filters.Subscriber('/anavs/solution/pose_enu', PoseWithCovarianceStamped)
-llh_sub = message_filters.Subscriber('/anavs/solution/pos_llh', PointStamped)
+rospy.init_node("custom_anavs")
+publisher = rospy.Publisher("pose", PoseStamped)
+enu_sub = message_filters.Subscriber("/anavs/solution/pose_enu", PoseWithCovarianceStamped)
+llh_sub = message_filters.Subscriber("/anavs/solution/pos_llh", PointStamped)
 
 ts = message_filters.TimeSynchronizer([enu_sub, llh_sub], queue_size=10)
 
