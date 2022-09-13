@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<launch>
+
+  <node pkg="ublox_gps" type="ublox_gps" name="ublox"
+        output="screen"
+        clear_params="true"
+        respawn="true"
+        respawn_delay="5">
+    <rosparam command="load"
+              file="$(find anavs-ros-adapter)/launch/zed_f9p.yaml" />
+  </node>
+
+  <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="world_tf"
+        args="0 0 0 0 0 0 1 world map" /> -->
+  
+  <node pkg="anavs-ros-adapter" type="ublox_translator.py" name="my_ublox" />
+
+  <node pkg="rviz"    type="rviz"   name="rviz"
+        args="-d $(find anavs-ros-adapter)/rviz/ublox.rviz" />
+
+</launch>
