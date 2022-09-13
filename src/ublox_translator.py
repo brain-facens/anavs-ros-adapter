@@ -1,35 +1,44 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 """Translates the information from ublox GNSS to pseudo-Mercator
 """
 
 import numpy as np
 import pyproj
 import rospy
-from geometry_msgs.msg import Point, PoseStamped, Quaternion
-from ublox_msgs.msg import NavPOSLLH, NavVELNED
+import tf2_ros
+from std_msgs.msg import Header
+from geometry_msgs.msg import Quaternion, TransformStamped, Transform, Vector3
+from ublox_msgs.msg import NavPVT
 
 WSG84 = 4326
 XY_METERS = 3857
 
 coord_transformer = pyproj.Transformer.from_crs(WSG84, XY_METERS)
 
-def combine(enu_pose: NavVELNED, llh_position: NavPOSLLH):
-    """Combines orientation information from ENU message with position from LLH
+def combine(ubx_sol):
+    """Combines orientation information from ENU message with position from LLH"""
 
-    :param pose: ENU pose message
-    :type pose: PoseWithCovarianceStamped
-    :param position: LLH position message
-    :type position: PointStamped
-    """
-
-    # Creates a pose object and fills header
-    new_pose = PoseStamped()
-    new_pose.header = rospy.Time.now()
-
-    # Creates Quaternion from heading information
-    theta = np.deg2rad(enu_pose.heading * 1e-5) / 2
-    new_pose.pose.orientation = Quaternion(w=np.cos(theta), z=np.sin(theta))
+    # Tranlates coordinates
+    x, y = coord_transformer.transform(ubx_sol.lat * 1e-7, ubx_sol.lon * 1e-7)
     
-    # Tranlates coordinates and adds position information from LLH
-    x, y = coord_transformer.transform(llh_position.lat * 1e-7, llh_position.lon * 1e-7)
-    new_pose.pose.position = Point(x, y, llh_position.height * 1e-3)
+    # Theta is half the heading angle
+    theta = np.deg2rad(ubx_sol.heading * 1e-5) / 2
+
+    new_tf = TransformStamped(
+        header = Header(
+            stamp = rospy.Time.now(),
+            frame_id = "map"
+        ),
+        child_frame_id = "gps",
+        transform = Transform(
+            translation = Vector3(x, y, ubx_sol.height * 1e-3),
+            rotation = Quaternion(w=np.cos(theta), z=np.sin(theta))
+        )
+    )
+
+    br.sendTransform(new_tf)
+
+rospy.init_node("custom_ublox")
+br = tf2_ros.TransformBroadcaster()
+rospy.Subscriber("ublox/navpvt", NavPVT, combine, queue_size=10)
+rospy.spin()
