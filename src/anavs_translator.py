@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 """Translates the information from ANAVS GNSS to pseudo-Mercator
 """
 
@@ -14,7 +14,7 @@ XY_METERS = 3857
 
 coord_transformer = pyproj.Transformer.from_crs(WSG84, XY_METERS)
 
-def combine(enu_pose: PoseWithCovarianceStamped, llh_position: PointStamped):
+def combine(enu_pose, llh_position):
     """Combines orientation information from ENU message with position from LLH"""
 
     # Tranlates coordinates and adds position information from LLH
@@ -24,9 +24,10 @@ def combine(enu_pose: PoseWithCovarianceStamped, llh_position: PointStamped):
         header = enu_pose.header,
         transform = Transform(
             translation = Vector3(x, y, llh_position.point.z),
-            orientation = enu_pose.pose.pose.orientation
+            rotation = enu_pose.pose.pose.orientation
         )
     )
+    new_tf.child_frame_id = "gps"
     br.sendTransform(new_tf)
     
 rospy.init_node("custom_anavs")
