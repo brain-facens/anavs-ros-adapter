@@ -1,4 +1,4 @@
-device: /dev/ttyACM0
+device: "udp://192.168.0.1:5555" # Colocar entre aspas
 frame_id: gps
 uart1:
   baudrate: 38400
